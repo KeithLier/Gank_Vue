@@ -3,7 +3,7 @@
     <template>
       <router-view/>
 
-      <tab-bar :currentIndex="currentIndex" @tab="changeTab"></tab-bar>
+      <tab-bar v-if="$route.meta.requireTabBar" :currentIndex="currentIndex" @tab="changeTab"></tab-bar>
     </template>
   </div>
 </template>

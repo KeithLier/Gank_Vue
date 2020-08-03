@@ -10,12 +10,18 @@ export default new Router({
     {
       path: '/',
       name: 'HomePage',
-      component: HomePage
+      component: HomePage,
+      meta: {
+        requireTabBar: true,  // 是否需要显示tabbar
+      }
     },
     {
       path: '/category',
       name: 'CategoryPage',
-      component: CategoryPage
+      component: CategoryPage,
+      meta: {
+        requireTabBar: true,  // 是否需要显示tabbar
+      }
     }
   ]
 })
