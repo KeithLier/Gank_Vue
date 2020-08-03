@@ -1,12 +1,34 @@
 <template>
   <div id="app">
-    <router-view/>    
+    <template>
+      <router-view/>
+
+      <tab-bar :currentIndex="currentIndex" @tab="changeTab"></tab-bar>
+    </template>
   </div>
 </template>
 
 <script>
+
+import tabBar from '@/components/TabBar.vue';
+
 export default {
-  name: 'App'
+  name: 'App',
+  components: {
+			tabBar
+  },
+  data () {
+    return {
+      currentIndex: 0,
+    }
+  },
+  methods:{
+		changeTab(e){
+			var _this = this;
+      _this.currentIndex = e.index;
+      _this.$router.push({path: e.url})
+		}
+	}
 }
 </script>
 

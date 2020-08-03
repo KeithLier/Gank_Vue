@@ -1,12 +1,13 @@
 <template>
   <div>
+    <h1>Categoty</h1>
   </div>
 </template>
 
 <script>
 
 export default {
-  name: 'HomePage',
+  name: 'CategoryPage',
   data () {
     return {
     }

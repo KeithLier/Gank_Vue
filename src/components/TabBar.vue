@@ -26,14 +26,14 @@
 					{
 						name: '分类阅读', 
 						index: 1, 
-						url: 'demo', 
+						url: 'category', 
 						src: require('../assets/category_normal.png'), 
 						selectSrc: require('../assets/category_selected.png')
           },
           {
 						name: '我的', 
-						index: 1, 
-						url: 'demo', 
+						index: 2, 
+						url: 'me', 
 						src: require('../assets/me_normal.png'), 
 						selectSrc: require('../assets/me_selected.png')
 					}
@@ -84,6 +84,6 @@
 		vertical-align: top;
 	}
 	.tab-footer-item.active p{
-		color: #197DE0;
+		color: #000;
 	}
 </style>
