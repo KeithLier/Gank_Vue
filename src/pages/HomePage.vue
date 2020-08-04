@@ -10,6 +10,11 @@
         <div class="swiper-pagination" slot="pagination"></div>
       </swiper>
     </div>
+    <el-tabs :stretch="true" v-model="activeName" @tab-click="handleClick">
+      <el-tab-pane label="专题分类" name="Article"></el-tab-pane>
+      <el-tab-pane label="干货分类" name="GanHuo"></el-tab-pane>
+      <el-tab-pane label="妹子图" name="Girl"></el-tab-pane>
+    </el-tabs>
   </div>
 </template>
 
@@ -42,7 +47,8 @@ export default {
           speed:1000,
           direction: "horizontal",
       },
-      banners: []
+      banners: [],
+      activeName:"Article"
     }
   },
   mounted() {
@@ -62,6 +68,11 @@ export default {
       .catch(error => {
 
       })
+    },
+
+    handleClick(tab, event) {
+      debugger
+      console.log(tab.name);
     }
 
   }
