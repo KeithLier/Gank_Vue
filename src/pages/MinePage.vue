@@ -1,6 +1,6 @@
 <template>
   <div>
-     <nav-bar title="分类" >
+     <nav-bar title="我的">
     </nav-bar>
   </div>
 </template>
@@ -9,7 +9,7 @@
 import navBar from '@/components/NavBar.vue';
 
 export default {
-  name: 'CategoryPage',
+  name: 'MinePage',
   components: {
       navBar
   },

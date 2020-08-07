@@ -11,10 +11,24 @@
       </swiper>
     </div>
     <el-tabs :stretch="true" v-model="activeName" @tab-click="handleClick">
-      <el-tab-pane label="专题分类" name="Article"></el-tab-pane>
       <el-tab-pane label="干货分类" name="GanHuo"></el-tab-pane>
+      <el-tab-pane label="专题分类" name="Article"></el-tab-pane>
       <el-tab-pane label="妹子图" name="Girl"></el-tab-pane>
     </el-tabs>
+    <div class="content_list">
+      <el-row v-for="(item, index) in results" :key="index">
+        <el-card :body-style="{ padding: '0px' }" >
+          <div class="content_card">
+            <img :src="item.images[0]" v-if="item.images.length > 0" class="image">
+            <div class="content_view" style="padding: 14px;">
+              <div class="content_title">{{item.title}}</div>
+              <div class="content_desc">{{item.desc}}</div>
+            </div>
+          </div>
+        </el-card>
+      </el-row>
+
+    </div>
   </div>
 </template>
 
@@ -48,11 +62,14 @@ export default {
           direction: "horizontal",
       },
       banners: [],
-      activeName:"Article"
+      activeName:"GanHuo",
+      results: []
     }
   },
   mounted() {
-    this.getBanners()
+    this.getBanners();
+    // this.getRandomData();
+    this.getWeekHotData();
   },
   computed: {
     getScreenWidth () {
@@ -70,11 +87,45 @@ export default {
       })
     },
 
-    handleClick(tab, event) {
-      debugger
-      console.log(tab.name);
-    }
+    getRandomData: function () {
+      let category = this.activeName;
+      axios.get('https://gank.io/api/v2/categories/' + category)
+      .then(response => {
+        let data = response.data.data;
+        let random = (Math.random() * 100).toFixed(0);
+        let index = random % data.length;
+        let item = data[index];
+        axios.get('https://gank.io/api/v2/random/category/' + category + "/type/" + item["type"] + "/count/20")
+        .then(response => {
+          let results = response.data.data;
+          this.results = results
+        })
+        .catch(error => {
 
+        })
+      })
+      .catch(error => {
+
+      })
+    },
+
+    getWeekHotData: function () {
+      let category = this.activeName;
+      axios.get('https://gank.io/api/v2/hot/views/category/' + category + "/count/20")
+      .then(response => {
+          let results = response.data.data;
+          this.results = results
+      })
+      .catch(error => {
+
+      })
+    },
+
+    handleClick(tab, event) {
+      this.activeName = tab.name;
+      // this.getRandomData();
+      this.getWeekHotData();
+    }
   }
 }
 </script>
@@ -100,5 +151,33 @@ export default {
   .swiper-container-horizontal > .swiper-pagination-bullets {
     bottom: 20px;
   }
+}
+
+.content_card {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+}
+.content_view {
+  position: relative;
+  float: left;
+  padding-left: 5px;
+}
+
+.image {
+  padding: 5px;
+  width: 100px;
+  height: 100px;
+}
+
+.content_title {
+  margin-top: 5px;
+  height: 30px;
+  font-size: 14px;
+}
+
+.content_desc {
+  top: 35px;
+  font-size: 12px;
 }
 </style>

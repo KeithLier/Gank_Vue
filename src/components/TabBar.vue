@@ -33,7 +33,7 @@
           {
 						name: '我的', 
 						index: 2, 
-						url: 'me', 
+						url: 'mine', 
 						src: require('../assets/me_normal.png'), 
 						selectSrc: require('../assets/me_selected.png')
 					}
