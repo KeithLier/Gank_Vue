@@ -27,7 +27,6 @@
           </div>
         </el-card>
       </el-row>
-
     </div>
   </div>
 </template>
