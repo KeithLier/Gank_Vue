@@ -1,57 +1,107 @@
 <template>
   <div>
     <div class="content_list">
-      <el-row v-for="(item, index) in results" :key="index">
-        <el-card :body-style="{ padding: '0px' }" >
-          <div class="content_card">
-            <img :src="item.images[0]" v-if="item.images.length > 0" class="image">
-            <div class="content_view" style="padding: 14px;">
-              <div class="content_title">{{item.title}}</div>
-              <div class="content_desc">{{item.desc}}</div>
-            </div>
-          </div>
-        </el-card>
-      </el-row>
+      <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
+        <van-list
+          v-model="loading"
+          :finished="finished"
+          finished-text="暂无更多数据"
+          :error.sync="error"
+          :immediate-check="false"
+          error-text="请求失败，点击重新加载"
+          @load="onLoad()"
+        >
+          <el-row v-for="(item, index) in results" :key="index">
+            <el-card :body-style="{ padding: '0px' }">
+              <div class="content_card">
+                <img :src="item.images[0]" v-if="item.images.length > 0" class="image" />
+                <div class="content_view" style="padding: 14px;">
+                  <div class="content_title">{{item.title}}</div>
+                  <div class="content_desc">{{item.desc}}</div>
+                </div>
+              </div>
+            </el-card>
+          </el-row>
+        </van-list>
+      </van-pull-refresh>
     </div>
   </div>
 </template>
 
 <script>
-import axios from 'axios'
+import axios from "axios";
 
 export default {
   name: "ContentList",
-  data () {
+  data() {
     return {
-      results: []
+      results: [],
+      page: 1,
+      count: 20,
+      pageCount: 0,
+      isLoading: false, // 下拉刷新
+      loading: false, // 上拉加载更多
+      finished: false, // 控制在页面往下移动到底部时是否调用接口获取数据
+      error: false, // 请求报错
+
+
     };
   },
 
-  mounted () {
+  mounted() {
     this.getContentList();
   },
 
   methods: {
-    getContentList () {
+    getContentList() {
       let category = this.$route.query.category;
       let type = this.$route.query.type;
-      axios.get('https://gank.io/api/v2/data/category/' + category + "/type/" + type + "/page/1/count/20")
-        .then(response => {
+      axios
+        .get(
+          "https://gank.io/api/v2/data/category/" +
+            category +
+            "/type/" +
+            type +
+            "/page/" +
+            this.page +
+            "/count/" +
+            this.count
+        )
+        .then((response) => {
+          this.pageCount = response.data.page_count;
           let results = response.data.data;
-          this.results = results
+          if(this.page == 1) {
+            this.results = results;
+          } else {
+            this.results = [...this.results, ...results];
+          }
+          if (this.page >= response.data.page_count) {
+              this.finished = true
+            } else {
+              this.finished = false
+            }
+            this.loading = false
         })
-        .catch(error => {
-
-        })
-
+        .catch((error) => {});
+    },
+    onLoad() {
+       if (this.page >= this.pageCount || !this.results.length) {
+        this.finished = true
+        this.loading = false
+        return
+      }
+      this.page += 1
+      this.getContentList()
+    },
+    onRefresh() {
+      this.page = 1;
+      this.getContentList();
     }
-  }
-  
-}
+  },
+};
 </script>
 
 <style scoped>
-
 .content_card {
   position: relative;
   display: flex;
@@ -80,4 +130,7 @@ export default {
   font-size: 12px;
 }
 
+.van-list__error-text {
+  display: none;
+}
 </style>
